@@ -1,0 +1,5 @@
+com\example\microo\controller\ReservationController.class
+com\example\microo\entities\Reservation.class
+com\example\microo\repositories\ReservationRepository.class
+com\example\microo\services\ReservationService.class
+com\example\microo\MicrooApplication.class
