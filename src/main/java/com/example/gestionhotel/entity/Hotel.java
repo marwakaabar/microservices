@@ -1,11 +1,11 @@
 package com.example.gestionhotel.entity;
 
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.io.Serializable;
 
