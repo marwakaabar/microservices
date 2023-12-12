@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+    discovery:
+      container_name: eurekaservice
+      build: ../EurekaServer
+      ports:
+        - "8761:8761"
+      hostname: eurekaservice
+      image: "discovery-service"
+
+
+    candidat:
+      build: ../msa
+      environment:
+        - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+      ports:
+        - "8090:8089"
+      hostname: candidat
+      image: "candidate-service"
+      depends_on:
+        - discovery
+        - job_A
+
+
+    job_A:
+      build: ../JobApp
+      environment:
+        - SPRING_DATASOURCE_URL=jdbc:mysql://docker-mysql:3306/jobs?autoReconnect=true&useSSL=false
+        - DB_USER=root
+        - DB_PWD=
+        - DB_NAME=jobs
+        - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+      ports:
+        - "8285:8280"
+      hostname: job
+      image: "job-service"
+      depends_on:
+        - discovery
+        - docker-mysql
+
+    docker-mysql:
+      image: "mysql:latest"
+      restart: always
+      environment:
+        - MYSQL_ALLOW_EMPTY_PASSWORD=1
+        - MYSQL_DATABASE=jobs
+      ports:
+        - "3308:3306"
