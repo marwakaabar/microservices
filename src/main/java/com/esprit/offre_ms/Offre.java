@@ -1,9 +1,6 @@
 package com.esprit.offre_ms;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import java.io.Serializable;
 
@@ -13,7 +10,9 @@ public class Offre implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idOffre;
     private String nomOffre;
-    private Boolean descriptionOffre;
+    private String descriptionOffre;
+
+    @Enumerated(EnumType.STRING)
     private TypeOffre typeOffre;
 
     public Long getIdOffre() {
@@ -28,11 +27,11 @@ public class Offre implements Serializable {
         this.nomOffre = nomOffre;
     }
 
-    public Boolean getDescriptionOffre() {
+    public String getDescriptionOffre() {
         return descriptionOffre;
     }
 
-    public void setDescriptionOffre(Boolean descriptionOffre) {
+    public void setDescriptionOffre(String descriptionOffre) {
         this.descriptionOffre = descriptionOffre;
     }
 
@@ -53,7 +52,7 @@ public class Offre implements Serializable {
         this.nomOffre = nomOffre;
     }
 
-    public Offre(String nomOffre, Boolean descriptionOffre, TypeOffre typeOffre) {
+    public Offre(String nomOffre, String descriptionOffre, TypeOffre typeOffre) {
         super();
         this.nomOffre = nomOffre;
         this.descriptionOffre = descriptionOffre;
