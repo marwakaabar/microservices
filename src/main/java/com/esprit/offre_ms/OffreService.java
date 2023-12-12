@@ -27,10 +27,6 @@ public class OffreService {
         return offreRepository.findByTypeOffre(typeOffre);
     }
 
-    /*public Offre updateOffre(Offre offre) {
-        return offreRepository.save(offre);
-    }*/
-
     public Offre updateOffre(Long id,Offre newOffre){
         if(offreRepository.findById(id).isPresent()){
             Offre existingOffre = offreRepository.findById(id).get();
