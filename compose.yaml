@@ -1,0 +1,114 @@
+version: "3.9"
+services:
+  discovery:
+    container_name: eurekadiscovery
+    build: ../../../Java projects/EurekaServer
+    ports:
+      - "8761:8761"
+    hostname: eurekadiscovery
+    image: "discovery-service"
+
+
+  offre_ms:
+    container_name: offre
+    build: ../Offre_MS
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://docker-postgres:5432/offre_ms_db
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+    ports:
+      - "8282:8282"
+    hostname: offre
+    image: "offre-service"
+    depends_on:
+      - discovery
+      - docker-postgres
+
+
+  hotel_ms:
+    container_name: hotel
+    build: ./microservices-gestion_hotel/microservices-gestion_hotel
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+    ports:
+      - "9079:9079"
+    hostname: hotel
+    image: "hotel-service"
+    depends_on:
+      - discovery
+
+  article_ms:
+    container_name: article
+    build: ./microservices-gestion_article/microservices-gestion_article
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+    ports:
+      - "9090:9090"
+    hostname: article
+    image: "article-service"
+    depends_on:
+      - discovery
+
+  pays_ms:
+    container_name: pays
+    build: ./microservices-gestion_pays/microservices-gestion_pays
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+    ports:
+      - "9099:9099"
+    hostname: pays
+    image: "pays-service"
+    depends_on:
+      - discovery
+
+
+  reservation_ms:
+    container_name: reservation
+    build: ./microservices-gestion_reservation/microservices-gestion_reservation
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+    ports:
+      - "8089:8080"
+    hostname: reservation
+    image: "reservation-service"
+    depends_on:
+      - discovery
+
+  site_touristique_ms:
+    container_name: site_touristique
+    build: ./microservices-gestion_sitetouristique/microservices-gestion_sitetouristique
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka/
+    ports:
+      - "9098:9098"
+    hostname: site_touristique
+    image: "site_touristique-service"
+    depends_on:
+      - discovery
+
+  api-gateway:
+    build: ./GateWay-main
+    container_name: gateway
+    ports:
+      - "8087:8087"
+    expose:
+      - "8087"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://discovery:8761/eureka
+    depends_on:
+      - discovery
+
+  docker-postgres:
+    container_name: postgres-db
+    image: "postgres:latest"
+    healthcheck:
+      test: ["CMD", "pg_isready","-q","-d","postgres","U","postgres"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=offre_ms_db
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
